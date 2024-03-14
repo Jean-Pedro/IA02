@@ -128,6 +128,9 @@ def is_contingent(formula: str) -> bool:
     return False
 
 
+
+
+
 def is_cons(f1: str, f2: str, voc: List[str]) -> bool:
     """Vérifie si la formule f2 est une conséquence logique de la formule f1"""
     interp: Generator = gen_interpretations(voc)
