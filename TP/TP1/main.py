@@ -1,6 +1,7 @@
 """TP1 IA02"""
 
 from typing import List, Dict, Generator
+import time
 
 
 def decomp(n: int, nb_bits: int) -> List[bool]:
@@ -128,6 +129,23 @@ def is_contingent(formula: str) -> bool:
     return False
 
 
+def test_valid():
+    start = time.time()
+    form: str = "A"
+    for i in range(20):
+        var: str = "A" + str(i + 1)
+        form += " and " + var
+    if is_valid(form):
+        print("Valide")
+    elif is_contradictory(form):
+        print("Contradictoire")
+    else:
+        print("Contingente")
+    end = time.time()
+    print(f"Temps : {end - start} secondes\n")
+
+
+
 def is_cons(f1: str, f2: str, voc: List[str]) -> bool:
     """Vérifie si la formule f2 est une conséquence logique de la formule f1"""
     interp: Generator = gen_interpretations(voc)
@@ -137,6 +155,7 @@ def is_cons(f1: str, f2: str, voc: List[str]) -> bool:
             return False
     return True
 
+test_valid()
 
 # decomp(5, 4)
 
