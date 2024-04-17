@@ -57,7 +57,7 @@ def graph(c, n, s, a):
         cnf += "0\n"
     cnf += "\n"
 
-    with open("tp2.cnf", "w", encoding="utf8") as file:
+    with open("/home/jpontoire/Documents/UTC/GI02/IA02/TP/TP2/tp2.cnf", "w", encoding="utf8") as file:
         file.write(cnf)
 
     print(cnf)
