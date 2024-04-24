@@ -154,9 +154,7 @@ def create_cell_constraints() -> ClauseBase:
     "crée les clauses d'une cellule"
     clauses: ClauseBase = []
     for i in range(0, 729, 9):  # un pas de 9 pour avoir bien 9 varaibles par cellule
-        clauses += unique(
-            [1 + i, 2 + i, 3 + i, 4 + i, 5 + i, 6 + i, 7 + i, 8 + i, 9 + i]
-        )
+        clauses += unique([1+i, 2+i, 3+i, 4+i, 5+i, 6+i, 7+i, 8+i, 9+i])
     return clauses
 
 
@@ -199,7 +197,7 @@ def create_box_constraints() -> ClauseBase:
                 liste = []
                 for l in range(3):
                     for m in range(3):
-                        liste.append((3 * j + m) * 9 + (3 * i + l) * 81 + k + 1)
+                        liste.append((3*j + m)*9 + (3*i + l)*81 + k + 1)
                         # *9 correspond aux lignes (+ 9 par variable), *81 les colonnes, k nb de box
                 clauses.append(at_least_one(liste))
     return clauses
@@ -237,7 +235,7 @@ def clauses_to_dimacs(clauses: ClauseBase, nb_vars: int) -> str:
     return txt
 
 
-def afficher_grille(grille: Grid):
+def afficher_sudoku(grille: Grid):
     "affiche la grille de sudoku"
     print("-------------------------")
     for i, ligne in enumerate(grille):
@@ -268,7 +266,7 @@ def main():
     grid_sol: Grid = model_to_grid(clauses)
     print(booleen)
     if booleen:
-        afficher_grille(grid_sol)
+        afficher_sudoku(grid_sol)
 
 
 if __name__ == "__main__":
