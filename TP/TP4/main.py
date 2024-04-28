@@ -148,9 +148,9 @@ def final(grid: State) -> bool:
 def score(grid: State) -> int:
     if final(grid):
         if verify(grid, PLAYER1):
-            return 1
+            return PLAYER1
         elif verify(grid, PLAYER2):
-            return -1
+            return PLAYER2
         return 0
     
 #print(score(GRID_PLAYER2))
@@ -175,5 +175,50 @@ def play(grid: State, player: Player, action: Action) -> State:
 
 #play(GRID_1, PLAYER1, (0,1))
 
+#def strategy(grid: State, player: Player) -> Action:
+
+
 def strategy(grid: State, player: Player) -> Action:
+    test : bool = False
+    print(f"à vous de jouer, joueur {player}")
+    while not(test):
+        pprint(grid)
+        print("Ligne : ", end="")
+        l = int(input())
+        print("Colonne :", end="")
+        c = int(input())
+        if (l,c) in legals(grid):
+            return (l,c)
+        print("Ce coup n'est pas possible")
+
+#print(strategy(GRID_1, PLAYER1))
+
+
+
+def strategy_first_legal(grid: State, player: Player) -> Action:
     
+
+
+
+def tictactoe(strategy_X: Strategy, strategy_O: Strategy, debug: bool = False) -> Score:
+    if not debug:
+        grid : Grid = EMPTY_GRID
+        player : int = PLAYER1
+        while not(final(grid)):
+            print("---------------------------")
+            if player == PLAYER1:
+                grid = play(grid, player, strategy_X(grid, player))
+                player = PLAYER2
+            else :
+                grid = play(grid, player, strategy_O(grid, player))
+                player = PLAYER1
+        result : int = score(grid)
+        print("---------------------------")
+        print(f"Le vainqueur est le joueur {result}")
+        pprint(grid)
+        return result
+    return result
+
+#tictactoe(strategy, strategy)
+
+
