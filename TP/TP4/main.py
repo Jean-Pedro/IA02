@@ -148,9 +148,9 @@ def final(grid: State) -> bool:
 def score(grid: State) -> int:
     if final(grid):
         if verify(grid, PLAYER1):
-            return PLAYER1
+            return 1
         elif verify(grid, PLAYER2):
-            return PLAYER2
+            return -1
         return 0
     
 #print(score(GRID_PLAYER2))
@@ -196,7 +196,18 @@ def strategy(grid: State, player: Player) -> Action:
 
 
 def strategy_first_legal(grid: State, player: Player) -> Action:
-    
+    coups : list[Action] = legals(grid)
+    choix : Action = coups[0]
+    print(f"Choix du joueur {player} : {choix}")
+    return choix
+
+
+def strategy_random(grid: State, player: Player) -> Action:
+    coups : list[Action] = legals(grid)
+    n = random.randint(0, len(coups) - 1)
+    choix : Action = coups[n]
+    print(f"Choix du joueur {player} : {choix}")
+    return choix
 
 
 
@@ -214,11 +225,78 @@ def tictactoe(strategy_X: Strategy, strategy_O: Strategy, debug: bool = False) -
                 player = PLAYER1
         result : int = score(grid)
         print("---------------------------")
-        print(f"Le vainqueur est le joueur {result}")
+        if result == 0:
+            print("Match nul")
+        else :
+            print(f"Le vainqueur est le joueur {result}")
         pprint(grid)
         return result
     return result
 
-#tictactoe(strategy, strategy)
+#tictactoe(strategy_random, strategy_random)
 
 
+def minmax(grid: State, player: Player) -> float:
+    best : float
+    coups : list[Action]
+    if final(grid):
+        return score(grid)
+    if player == PLAYER1:
+        best = float("-inf")
+        coups = legals(grid)
+        for coup in coups:
+            tmp : State = play(grid, player, coup)
+            val = minmax(tmp, PLAYER2)
+            if max(best, val) == val:
+                best = val
+        return best
+    
+    if player == PLAYER2:
+        best = float("inf")
+        coups = legals(grid)
+        for coup in coups:
+            tmp : State = play(grid, player, coup)
+            val = minmax(tmp, PLAYER1)
+            if min(best, val) == val:
+                best = val
+        return best
+
+
+#print(minmax(GRID_1, PLAYER1))
+
+
+def minmax_action(grid: State, player: Player, depth: int = 0) -> tuple[float, Action]:
+    best : tuple[float, Action]
+    coups : list[Action]
+    if final(grid):
+        return (score(grid), (-1, -1))
+    
+    if player == PLAYER1:
+        best = (float("-inf"), (-1, -1))
+        coups = legals(grid)
+        for coup in coups:
+            tmp : State = play(grid, player, coup)
+            val = minmax_action(tmp, PLAYER2, depth - 1)
+            if max(best[0], val[0]) == val[0]:
+                best = (val[0], coup)
+        return best
+    
+    if player == PLAYER2:
+        best = (float("inf"), (-1, -1))
+        coups = legals(grid)
+        for coup in coups:
+            tmp : State = play(grid, player, coup)
+            val = minmax_action(tmp, PLAYER1, depth - 1)
+            if min(best[0], val[0]) == val[0]:
+                best = (val[0], coup)
+        return best
+
+# problème : vu que dans tous les cas il va perdre il prend pas le coup qui fait durer la partie le plus longtemps, seulement le premier
+
+
+GRID_TEST: Grid = ((0, 0, 0), (0, X, O), (0, 0, X))
+# (0, 0, 0),
+# (0, X, O),
+# (0, 0, X))    
+
+print(minmax_action(GRID_TEST, PLAYER2))
