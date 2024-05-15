@@ -1,10 +1,10 @@
-from typing import List, Callable
+from typing import List, Callable, Tuple, List
 import ast
 import random
 
-Grid = tuple[tuple[int, ...], ...]
+Grid = Tuple[Tuple[int, ...], ...]
 State = Grid
-Action = tuple[int, int]
+Action = Tuple[int, int]
 Player = int
 Score = float
 Strategy = Callable[[State, Player], Action]
@@ -50,7 +50,7 @@ GRID_PLAYER2 : Grid = ((O, 0, X), (X, O, O), (O, X, O))
 
 
 
-def grid_tuple_to_grid_list(grid: Grid) -> list[list[int]]:
+def grid_tuple_to_grid_list(grid: Grid) -> List[List[int]]:
     liste : List = []
     for i in grid:
         tmp : List = []
@@ -61,7 +61,7 @@ def grid_tuple_to_grid_list(grid: Grid) -> list[list[int]]:
 
 #print(grid_tuple_to_grid_list(((O, 0, X), (0, X, O), (O, X, 0))))
 
-def grid_list_to_grid_tuple(grid: list[list[int]]) -> Grid:
+def grid_list_to_grid_tuple(grid: List[List[int]]) -> Grid:
     t: tuple
     l : List = []
     for i in grid:
@@ -72,7 +72,7 @@ def grid_list_to_grid_tuple(grid: list[list[int]]) -> Grid:
 #print(grid_list_to_grid_tuple([[2, 0, 1], [0, 1, 2], [2, 1, 0]]))
 
 
-def legals(grid: State) -> list[Action]:
+def legals(grid: State) -> List[Action]:
     actions : List = []
     for i in range(len(grid)):
         for j in range(len(grid[i])):
@@ -265,7 +265,7 @@ def minmax(grid: State, player: Player) -> float:
 #print(minmax(GRID_1, PLAYER1))
 
 
-def minmax_action(grid: State, player: Player, depth: int = 0) -> tuple[float, Action]:
+def minmax_action(grid: State, player: Player, depth: int = 0) -> Tuple[float, Action]:
     best : tuple[float, Action]
     coups : list[Action]
     if final(grid):
@@ -291,7 +291,14 @@ def minmax_action(grid: State, player: Player, depth: int = 0) -> tuple[float, A
                 best = (val[0], coup)
         return best
 
-# problème : vu que dans tous les cas il va perdre il prend pas le coup qui fait durer la partie le plus longtemps, seulement le premier
+
+
+def strategy_minmax_random(grid: State, player: Player):
+    strategy = minmax_action(grid, player)
+    actions = strategy[1]
+    return actions[random.randint(0, len(actions) - 1)]
+
+
 
 
 GRID_TEST: Grid = ((0, 0, 0), (0, X, O), (0, 0, X))
@@ -299,4 +306,4 @@ GRID_TEST: Grid = ((0, 0, 0), (0, X, O), (0, 0, X))
 # (0, X, O),
 # (0, 0, X))    
 
-print(minmax_action(GRID_TEST, PLAYER2))
+#print(minmax_action(GRID_TEST, PLAYER2))
